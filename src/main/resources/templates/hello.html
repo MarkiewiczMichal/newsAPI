@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html  xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<nav th:replace="navTemplate :: nav-menu" />
+
+
+Najpierw trzeba wygenerować wszystkie newsy
+ <form th:action="@{/dupa/sports}" methond="post">
+     <p><input type="submit" value="Wszystkie newsy"></p>
+ </form>
+
+a dopiero pozniej mozna sie bawić w szczesliwy traf
+ <form th:action="@{/kupa/sports}" methond="post">
+     <p><input type="submit" value="Szcześliwy traf"></p>
+ </form>
+
+</body>
+</html>

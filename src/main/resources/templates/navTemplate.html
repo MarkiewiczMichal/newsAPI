@@ -1,0 +1,14 @@
+<html xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<nav th:fragment="nav-menu" class="menu" style="color:blue; background:skyblue; height:75px; text-align: center; ">
+
+
+    <div style="float:left;width:20%;margin:3px; padding:2%"> Strona do przeglądania najnowszych wiadomości</div>
+    <div style="float:left;width:20%;margin:3px; padding:2%;">
+        <form th:action="@{/hello}" method="post">
+            <input type="submit" value="Strona główna"/>
+        </form>
+    </div>
+
+
+</nav>
+</html>
