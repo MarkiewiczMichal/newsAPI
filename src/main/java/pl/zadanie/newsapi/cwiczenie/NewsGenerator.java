@@ -1,6 +1,5 @@
 package pl.zadanie.newsapi.cwiczenie;
 
-import com.ea.async.Async;
 import com.kwabenaberko.newsapilib.NewsApiClient;
 import com.kwabenaberko.newsapilib.models.Article;
 import com.kwabenaberko.newsapilib.models.request.TopHeadlinesRequest;
@@ -10,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
 public class NewsGenerator {
 
@@ -42,6 +42,7 @@ public class NewsGenerator {
     }
 
     public void somethingNews(String kindofNews) {
+        CompletableFuture future = new CompletableFuture<ArticleResponse>();
 
         NewsApiClient newsApiClient = new NewsApiClient("6be3100f0ee74e16aa370f7d5ac62bcd");
         newsApiClient.getTopHeadlines(
@@ -52,25 +53,34 @@ public class NewsGenerator {
                 new NewsApiClient.ArticlesResponseCallback() {
                     @Override
                     public void onSuccess(ArticleResponse response) {
-
-                        for (Article article : response.getArticles()) {
-                            setArticles(article);
-                            String daneArtykulu = article.getTitle() +
-                                    ":" + article.getDescription() +
-                                    ":" + article.getAuthor() +
-                                    System.getProperty("line.separator");
-                            //  System.out.println(daneArtykulu);
-                            setWantedNews(daneArtykulu);
-                        }
-
+                        future.complete(response);
                     }
 
                     @Override
                     public void onFailure(Throwable throwable) {
-                        System.out.println(throwable.getMessage());
+                        future.complete(throwable);
                     }
                 }
         );
+
+        ArticleResponse response = null;
+        try {
+            response = (ArticleResponse) future.get();
+            for (Article article : response.getArticles()) {
+                setArticles(article);
+                String daneArtykulu = article.getTitle() +
+                        ":" + article.getDescription() +
+                        ":" + article.getAuthor() +
+                        System.lineSeparator();
+                //  System.out.println(daneArtykulu);
+                setWantedNews(daneArtykulu);
+            }
+
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
 
     }
 }
